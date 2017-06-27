@@ -1,0 +1,22 @@
+{
+  "name": "cic-api",
+  "version": "0.0.1",
+  "description": "API for Project CIC (to avoid CORS)",
+  "engines": {
+    "node": ">=7.8.0"
+  },
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dark Turtle",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.2.0",
+    "koa-body": "^2.0.1",
+    "koa-router": "^7.2.0",
+    "koa2-cors": "^2.0.3",
+    "requestify": "^0.2.5"
+  }
+}
