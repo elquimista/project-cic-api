@@ -1,7 +1,7 @@
 {
   "name": "cic-api",
-  "version": "0.0.1",
-  "description": "API for Project CIC (to avoid CORS)",
+  "version": "1.0.0",
+  "description": "API for Project CIC (to handle CORS issue)",
   "engines": {
     "node": ">=7.8.0"
   },
