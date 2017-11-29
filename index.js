@@ -12,10 +12,18 @@ const app = new Koa();
 const router = new Router();
 const {
   GITHUB_OAUTH_APP_CLIENT_ID: client_id,
-  GITHUB_OAUTH_APP_CLIENT_SECRET: client_secret
+  GITHUB_OAUTH_APP_CLIENT_SECRET: client_secret,
+  FRONTEND_APP_BASE_URL
 } = process.env;
 
 router
+  .get('/', async (ctx, next) => {
+    const { code } = ctx.request.query;
+    if (code) {
+      ctx.redirect(`${FRONTEND_APP_BASE_URL}?code=${code}`);
+    }
+    return next();
+  })
   .post('/github/oauth', async (ctx, next) => {
     const { code } = ctx.request.body;
     try {
