@@ -10,11 +10,14 @@ const cors = require('koa2-cors');
 
 const app = new Koa();
 const router = new Router();
-const { GITHUB_OAUTH_APP_CLIENT_SECRET: client_secret } = process.env;
+const {
+  GITHUB_OAUTH_APP_CLIENT_ID: client_id,
+  GITHUB_OAUTH_APP_CLIENT_SECRET: client_secret
+} = process.env;
 
 router
   .post('/github/oauth', async (ctx, next) => {
-    const { client_id, code } = ctx.request.body;
+    const { code } = ctx.request.body;
     try {
       const response = await requestify.post('https://github.com/login/oauth/access_token', {
         client_id, client_secret, code
