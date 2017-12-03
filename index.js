@@ -13,7 +13,11 @@ const router = new Router();
 const {
   GITHUB_OAUTH_APP_CLIENT_ID: client_id,
   GITHUB_OAUTH_APP_CLIENT_SECRET: client_secret,
-  FRONTEND_APP_BASE_URL
+  FRONTEND_APP_BASE_URL,
+  GITHUB_LOGIN,
+  GITHUB_PERSONAL_ACCESS_TOKEN,
+  FRONTEND_APP_GITHUB_REPO_OWNER_LOGIN,
+  FRONTEND_APP_GITHUB_REPO_NAME
 } = process.env;
 
 router
@@ -36,6 +40,37 @@ router
       ctx.body = err.getBody();
       ctx.status = 401;
     }
+    return next();
+  })
+  .get('/latest-version', async (ctx, next) => {
+    const response = await requestify.post('https://api.github.com/graphql', {
+      query: `
+        query ($ownerLogin: String!, $repoName: String!) {
+          repositoryOwner(login: $ownerLogin) {
+            repository(name: $repoName) {
+              refs(refPrefix: "refs/tags/", last: 1) {
+                edges {
+                  node {
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        ownerLogin: FRONTEND_APP_GITHUB_REPO_OWNER_LOGIN,
+        repoName: FRONTEND_APP_GITHUB_REPO_NAME
+      }
+    }, {
+      auth: {
+        username: GITHUB_LOGIN,
+        password: GITHUB_PERSONAL_ACCESS_TOKEN
+      }
+    });
+    ctx.body = response.getBody().data.repositoryOwner.repository.refs.edges[0].node.name;
+    ctx.status = 200;
     return next();
   });
 
